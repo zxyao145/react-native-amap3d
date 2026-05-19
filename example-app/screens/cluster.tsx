@@ -13,7 +13,9 @@ export default class Clustering extends Component {
   render() {
     return (
       <MapView
-        ref={(ref) => (this.mapView = ref)}
+        ref={(ref) => {
+          this.mapView = ref;
+        }}
         onLoad={() => this.mapView?.moveCamera({ zoom: 8 }, 100)}
         onCameraIdle={({ nativeEvent }) => {
           this.status = nativeEvent;
@@ -31,7 +33,9 @@ export default class Clustering extends Component {
               200
             );
           }}
-          ref={(ref) => (this.cluster = ref)}
+          ref={(ref) => {
+            this.cluster = ref;
+          }}
           points={this.state.markers}
           renderMarker={(item) => (
             <Marker

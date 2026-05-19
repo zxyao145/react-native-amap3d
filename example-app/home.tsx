@@ -10,14 +10,10 @@ import {
   View,
 } from "react-native";
 import { AMapSdk } from "react-native-amap3d";
-import { Constructor } from "react-native/private/Utilities";
 import screens from "./screens";
 import { NavigationProps, ScreenName } from "./types";
 
-let Touchable: Constructor<any> = TouchableOpacity;
-if (Platform.OS === "android") {
-  Touchable = TouchableNativeFeedback;
-}
+const Touchable = Platform.OS === "android" ? TouchableNativeFeedback : TouchableOpacity;
 
 export default () => {
   const navigation = useNavigation<NavigationProps>();

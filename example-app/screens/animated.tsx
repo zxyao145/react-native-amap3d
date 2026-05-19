@@ -2,11 +2,16 @@ import * as React from "react";
 import { Dimensions, PixelRatio, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { MapView } from "react-native-amap3d";
 
-let mapView: MapView;
+let mapView: MapView | null = null;
 
 export default () => (
   <View style={style.body}>
-    <MapView ref={(ref: MapView) => (mapView = ref)} style={style.body} />
+    <MapView
+      ref={(ref) => {
+        mapView = ref;
+      }}
+      style={style.body}
+    />
     <View style={style.buttons}>
       <View style={style.button}>
         <TouchableOpacity

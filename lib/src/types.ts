@@ -107,6 +107,14 @@ export interface Location extends LatLng {
 }
 
 /**
+ * 定位事件
+ */
+export interface LocationEvent {
+  coords: Location;
+  timestamp: number;
+}
+
+/**
  * 地图类型
  */
 export enum MapType {

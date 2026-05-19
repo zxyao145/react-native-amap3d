@@ -63,7 +63,7 @@ interface Props {
   /**
    * 渲染聚合点
    */
-  renderCluster?: (params: ClusterParams) => React.ComponentType<any>;
+  renderCluster?: (params: ClusterParams) => React.ReactNode;
 
   /**
    * 聚合点点击事件
@@ -95,7 +95,7 @@ export default class Cluster extends React.PureComponent<Props, State> {
     const { radius, points } = this.props;
     // 如果主线程占用太多计算资源，会导致 ios onLoad 事件无法触发，非常蛋疼
     // 暂时想到的解决办法是等一个事件循环
-    await new Promise((resolve) => setTimeout(resolve, 0));
+    await new Promise<void>((resolve) => setTimeout(resolve, 0));
     const options = { radius, minZoom: 3, maxZoom: 21 };
     this.cluster = new Supercluster<any, ClusterProperties>(options).load(
       points.map((marker) => ({
@@ -117,7 +117,7 @@ export default class Cluster extends React.PureComponent<Props, State> {
    */
   async update(status: CameraEvent) {
     this.status = status;
-    await new Promise((resolve) => setTimeout(resolve, 0));
+    await new Promise<void>((resolve) => setTimeout(resolve, 0));
     const { cameraPosition, latLngBounds } = status;
     const { southwest, northeast } = latLngBounds;
     const clusters = this.cluster!.getClusters(
@@ -142,18 +142,22 @@ export default class Cluster extends React.PureComponent<Props, State> {
   render() {
     const { renderCluster, renderMarker } = this.props;
     const render = renderCluster || this.renderCluster;
-    return this.state.clusters.map(({ geometry, properties }) => {
-      const position = {
-        latitude: geometry.coordinates[1],
-        longitude: geometry.coordinates[0],
-      };
+    return (
+      <>
+        {this.state.clusters.map(({ geometry, properties }) => {
+          const position = {
+            latitude: geometry.coordinates[1],
+            longitude: geometry.coordinates[0],
+          };
 
-      if (properties.point_count > 0) {
-        const { cluster_id, point_count } = properties;
-        return render({ position, id: cluster_id, count: point_count });
-      }
+          if (properties.point_count > 0) {
+            const { cluster_id, point_count } = properties;
+            return render({ position, id: cluster_id, count: point_count });
+          }
 
-      return renderMarker({ position, properties });
-    });
+          return renderMarker({ position, properties });
+        })}
+      </>
+    );
   }
 }

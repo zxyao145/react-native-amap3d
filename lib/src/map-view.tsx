@@ -6,7 +6,7 @@ import {
   ViewProps,
 } from "react-native";
 import Component from "./component";
-import { CameraPosition, LatLng, LatLngBounds, MapPoi, MapType, Point } from "./types";
+import { CameraPosition, LatLng, LatLngBounds, LocationEvent, MapPoi, MapType, Point } from "./types";
 
 export interface CameraEvent {
   cameraPosition: CameraPosition;
@@ -150,7 +150,7 @@ export interface MapViewProps extends ViewProps {
   /**
    * 地图定位更新事件
    */
-  onLocation?: (event: NativeSyntheticEvent<GeolocationPosition>) => void;
+  onLocation?: (event: NativeSyntheticEvent<LocationEvent>) => void;
 }
 
 const name = "AMapView";
@@ -209,7 +209,9 @@ export default class extends Component<MapViewProps> {
     return (
       <NativeMapView
         {...this.props}
-        ref={(ref) => (this.ref = ref)}
+        ref={(ref) => {
+          this.ref = ref;
+        }}
         style={style}
         // @ts-ignore: 内部接口
         onCallback={this.callback}

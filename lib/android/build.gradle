@@ -1,12 +1,5 @@
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-
-def getExt(prop, fallback) {
-    rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
-}
-
 buildscript {
-    ext.kotlin_version = '1.7.21'
+    def kotlinVersion = rootProject.ext.has('kotlinVersion') ? rootProject.ext.get('kotlinVersion') : '2.1.20'
 
     repositories {
         google()
@@ -14,13 +7,23 @@ buildscript {
     }
 
     dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
     }
 }
 
+apply plugin: 'com.android.library'
+apply plugin: 'org.jetbrains.kotlin.android'
+
+def getExt(prop, fallback) {
+    rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
+}
+
+def kotlinVersion = getExt('kotlinVersion', '2.1.20')
+
 android {
-    compileSdkVersion getExt('compileSdkVersion', 33)
-    buildToolsVersion getExt('buildToolsVersion', '33.0.0')
+    namespace "qiuxiang.amap3d"
+    compileSdkVersion getExt('compileSdkVersion', 36)
+    buildToolsVersion getExt('buildToolsVersion', '36.0.0')
 
     sourceSets {
         main {
@@ -33,13 +36,13 @@ android {
     }
 
     defaultConfig {
-        minSdkVersion getExt('minSdkVersion', 21)
-        targetSdkVersion getExt('targetSdkVersion', 33)
+        minSdkVersion getExt('minSdkVersion', 24)
+        targetSdkVersion getExt('targetSdkVersion', 36)
     }
 }
 
 dependencies {
-    compileOnly 'com.facebook.react:react-native:+'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    compileOnly 'com.facebook.react:react-android'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     implementation files('libs/AMap3DMap_10.1.600_AMapSearch_9.7.4_AMapLocation_6.5.1_20251020.jar')
 }

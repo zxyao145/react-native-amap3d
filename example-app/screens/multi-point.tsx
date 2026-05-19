@@ -1,5 +1,5 @@
 import * as React from "react";
-import { StyleSheet } from "react-native";
+import { Alert, StyleSheet } from "react-native";
 import { MapView, MultiPoint } from "react-native-amap3d";
 
 const points = Array(1000)
@@ -14,7 +14,7 @@ export default () => (
     <MultiPoint
       icon={require("../images/point.png")}
       items={points}
-      onPress={({ nativeEvent }) => alert(nativeEvent.index)}
+      onPress={({ nativeEvent }) => Alert.alert(String(nativeEvent.index))}
     />
   </MapView>
 );

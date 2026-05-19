@@ -1,9 +1,10 @@
 import * as React from "react";
+import { Alert } from "react-native";
 import { LatLng, MapView, Marker } from "react-native-amap3d";
 
 export default () => {
   const [markers, setMarkers] = React.useState(Array<LatLng>());
-  React.useEffect(() => alert("点击地图添加 Marker，点击 Marker 移除"), []);
+  React.useEffect(() => Alert.alert("点击地图添加 Marker，点击 Marker 移除"), []);
   console.log(markers);
   return (
     <MapView

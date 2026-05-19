@@ -1,5 +1,5 @@
 import * as React from "react";
-import { StyleSheet } from "react-native";
+import { Alert, StyleSheet } from "react-native";
 import { MapView, Polyline } from "react-native-amap3d";
 
 const line1 = [
@@ -26,7 +26,7 @@ export default () => (
     <Polyline
       width={5}
       colors={["#f44336", "#2196f3", "#4caf50"]}
-      onPress={() => alert("onPress")}
+      onPress={() => Alert.alert("onPress")}
       points={line3}
       gradient
     />

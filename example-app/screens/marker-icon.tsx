@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { StyleSheet, Text } from "react-native";
+import { Alert, StyleSheet, Text } from "react-native";
 import { MapView, Marker } from "react-native-amap3d";
 
 export default () => {
@@ -15,11 +15,11 @@ export default () => {
     <MapView initialCameraPosition={{ zoom: 11.2 }}>
       <Marker
         position={{ latitude: 39.806901, longitude: 116.397972 }}
-        onPress={() => alert("onPress")}
+        onPress={() => Alert.alert("onPress")}
         icon={require("../images/flag.png")}
       />
       <Marker
-        onPress={() => alert("onPress")}
+        onPress={() => Alert.alert("onPress")}
         position={{ latitude: 39.806901, longitude: 116.297972 }}
         icon={{
           uri: "https://reactnative.dev/img/pwa/manifest-icon-512.png",
@@ -29,7 +29,7 @@ export default () => {
       />
       <Marker
         position={{ latitude: 39.906901, longitude: 116.397972 }}
-        onPress={() => alert("onPress")}
+        onPress={() => Alert.alert("onPress")}
       >
         <Text style={style.customView}>{time.toLocaleString()}</Text>
       </Marker>
