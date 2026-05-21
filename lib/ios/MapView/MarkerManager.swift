@@ -14,7 +14,11 @@ class AMapMarkerManager: RCTViewManager {
 
   func getView(reactTag: NSNumber, callback: @escaping (Marker) -> Void) {
     bridge.uiManager.addUIBlock { _, viewRegistry in
-      callback(viewRegistry![reactTag] as! Marker)
+      guard let marker = viewRegistry?[reactTag] as? Marker else {
+        return
+      }
+
+      callback(marker)
     }
   }
 }
@@ -63,11 +67,11 @@ class Marker: UIView {
    * 正常情况下就把 subview 的 opacity 设成 0，需要渲染的时候才设成 1，渲染然后马上设回 0。
    */
   func update() {
-    if centerOffset == nil, view != nil {
-      iconView?.layer.opacity = 1
-      let renderer = UIGraphicsImageRenderer(bounds: iconView!.bounds)
+    if centerOffset == nil, view != nil, let iconView, !iconView.bounds.isEmpty {
+      iconView.layer.opacity = 1
+      let renderer = UIGraphicsImageRenderer(bounds: iconView.bounds)
       view?.image = renderer.image { context in layer.render(in: context.cgContext) }
-      iconView?.layer.opacity = 0
+      iconView.layer.opacity = 0
       updateCenterOffset()
     }
   }

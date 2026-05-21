@@ -19,7 +19,7 @@ export default class Component<P, S = {}> extends PureComponent<P, S> {
   /**
    * 调用原生方法
    */
-  invoke(name: string, params?: any[]) {
+  invoke(name: string, params: any[] = []) {
     if (!this.mounted) return;
 
     const handle = findNodeHandle(this);
