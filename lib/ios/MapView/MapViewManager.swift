@@ -117,9 +117,44 @@ class MapView: MAMapView, MAMapViewDelegate {
   }
 
   // MARK: - 子视图管理
-  override func didAddSubview(_ subview: UIView) {
-    if let overlay = (subview as? Overlay)?.getOverlay() {
-      overlayMap[overlay] = subview as? Overlay
+  @objc(insertReactSubview:atIndex:)
+  override func insertReactSubview(_ subview: UIView!, at atIndex: Int) {
+    guard let subview else { return }
+
+    let safeIndex = clampedReactSubviewIndex(atIndex)
+    super.insertReactSubview(subview, at: safeIndex)
+    addMapFeatureSubview(subview)
+  }
+
+  @objc(removeReactSubview:)
+  override func removeReactSubview(_ subview: UIView!) {
+    guard let subview else { return }
+
+    removeMapFeatureSubview(subview)
+    super.removeReactSubview(subview)
+  }
+
+  private func clampedReactSubviewIndex(_ index: Int) -> Int {
+    let subviewCount = reactSubviews()?.count ?? 0
+
+    if index < 0 {
+      return 0
+    }
+
+    if index > subviewCount {
+      return subviewCount
+    }
+
+    return index
+  }
+
+  private func addMapFeatureSubview(_ subview: UIView) {
+    if let overlayView = subview as? Overlay {
+      let overlay = overlayView.getOverlay()
+
+      guard overlayMap[overlay] == nil else { return }
+
+      overlayMap[overlay] = overlayView
       // 根据zIndex设置overlay层级
       if let circle = subview as? Circle {
         // zIndex < 0 使用 MAOverlayLevelAboveRoads（在道路和标注之下）
@@ -130,20 +165,25 @@ class MapView: MAMapView, MAMapViewDelegate {
         add(overlay)
       }
     }
-    if let annotation = (subview as? Marker)?.annotation {
-      markerMap[annotation] = subview as? Marker
+
+    if let marker = subview as? Marker {
+      let annotation = marker.annotation
+
+      guard markerMap[annotation] == nil else { return }
+
+      markerMap[annotation] = marker
       addAnnotation(annotation)
     }
   }
 
-  override func removeReactSubview(_ subview: UIView!) {
-    super.removeReactSubview(subview)
-    if let overlay = (subview as? Overlay)?.getOverlay() {
-      overlayMap.removeValue(forKey: overlay)
+  private func removeMapFeatureSubview(_ subview: UIView) {
+    if let overlay = (subview as? Overlay)?.getOverlay(),
+      overlayMap.removeValue(forKey: overlay) != nil {
       remove(overlay)
     }
-    if let annotation = (subview as? Marker)?.annotation {
-      markerMap.removeValue(forKey: annotation)
+
+    if let annotation = (subview as? Marker)?.annotation,
+      markerMap.removeValue(forKey: annotation) != nil {
       removeAnnotation(annotation)
     }
   }
