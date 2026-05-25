@@ -25,7 +25,11 @@ class AMapViewManager: RCTViewManager {
 
   func getView(reactTag: NSNumber, callback: @escaping (MapView) -> Void) {
     bridge.uiManager.addUIBlock { _, viewRegistry in
-      callback(viewRegistry![reactTag] as! MapView)
+      guard let view = viewRegistry?[reactTag] as? MapView else {
+        return
+      }
+
+      callback(view)
     }
   }
 }
@@ -57,7 +61,6 @@ class MapView: MAMapView, MAMapViewDelegate {
 
   // MARK: 蓝点箭头配置
   private func setupUserLocationStyle() {
-    showsUserLocation = true
     // userTrackingMode = .followWithHeading
     userTrackingMode = .none
     delegate = self
